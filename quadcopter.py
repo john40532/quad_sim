@@ -20,6 +20,9 @@ class Propeller():
         self.thrust = self.thrust*(4.23e-4 * self.speed * self.pitch)
         if self.thrust_unit == 'Kg':
             self.thrust = self.thrust*0.101972
+    
+    def set_force(self,force):
+        self.thrust = force
 
 class Quadcopter():
     # State space representation: [x y z x_dot y_dot z_dot theta phi gamma theta_dot phi_dot gamma_dot]
@@ -100,6 +103,12 @@ class Quadcopter():
         self.quads[quad_name]['m3'].set_speed(speeds[2])
         self.quads[quad_name]['m4'].set_speed(speeds[3])
 
+    def set_motor_force(self,quad_name,forces):
+        self.quads[quad_name]['m1'].set_force(forces[0])
+        self.quads[quad_name]['m2'].set_force(forces[1])
+        self.quads[quad_name]['m3'].set_force(forces[2])
+        self.quads[quad_name]['m4'].set_force(forces[3])
+
     def get_position(self,quad_name):
         return self.quads[quad_name]['state'][0:3]
 
@@ -121,6 +130,9 @@ class Quadcopter():
     def set_orientation(self,quad_name,orientation):
         self.quads[quad_name]['state'][6:9] = orientation
 
+    def set_state(self,quad_name,state):
+        self.quads[quad_name]['state'] = state
+
     def get_time(self):
         return self.time
 
@@ -137,6 +149,9 @@ class Quadcopter():
     def start_thread(self,dt=0.002,time_scaling=1):
         self.thread_object = threading.Thread(target=self.thread_run,args=(dt,time_scaling))
         self.thread_object.start()
+
+    def join_thread(self):
+        self.thread_object.join()
 
     def stop_thread(self):
         self.run = False

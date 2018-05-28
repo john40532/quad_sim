@@ -89,6 +89,9 @@ class Controller_PID_Point2Point():
         self.thread_object = threading.Thread(target=self.thread_run,args=(update_rate,time_scaling))
         self.thread_object.start()
 
+    def join_thread(self):
+        self.thread_object.join()
+
     def stop_thread(self):
         self.run = False
 
